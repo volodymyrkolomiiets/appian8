@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  user_db:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - user-service/.env
+    volumes:
+      - ${PWD}/user-service/db_data:/var/lib/mysql
+
+    ports:
+      - 33061:3306
+
+
+
+
