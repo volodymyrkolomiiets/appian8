@@ -20,8 +20,13 @@ class DevelopmentConfig(Config):
     MYSQL_USER = os.getenv("MYSQL_USER")
     MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
     MYSQL_POORT = os.getenv("MYSQL_POORT")
+    HOST = "localhost"
 
-    SQLALCHEMY_DATABASE_URI = f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@localhost:{MYSQL_POORT}/{MYSQL_DATABASE}"
+    if os.getenv("DOCKER_HOST"):
+        HOST = "user-db"
+        MYSQL_POORT = 3306
+
+    SQLALCHEMY_DATABASE_URI = f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{HOST}:{MYSQL_POORT}/{MYSQL_DATABASE}"
     SQLALCHEMY_ECHO = True
 
 

@@ -1,16 +1,43 @@
 version: "3.9"
 services:
-  user_db:
+  user-db:
     image: mysql:8.0
     restart: always
     env_file:
       - user-service/.env
     volumes:
       - ${PWD}/user-service/db_data:/var/lib/mysql
-
     ports:
       - 33061:3306
+    networks:
+      user_net:
 
+  user-serv:
+    build:
+      context: user-service
+      dockerfile: Dockerfile
+    env_file:
+      - user-service/.env
+    ports:
+      - 5001:5001
+    depends_on:
+      - user-db
+    volumes:
+      - ${PWD}/user-service:/userapp
+    networks:
+      - user_net
 
+  product-db:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - product-service/.env
+    volumes:
+      - ${PWD}/product-service/db_data:/var/lib/mysql
+    ports:
+      - 33062:3306
+    networks:
+      user_net:
 
-
+networks:
+  user_net:

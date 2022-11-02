@@ -130,4 +130,5 @@ dmypy.json
 user-service/user-variables.env
 db_data
 .uenv
+.penv
 .idea
