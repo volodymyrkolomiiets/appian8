@@ -131,4 +131,5 @@ user-service/user-variables.env
 db_data
 .uenv
 .penv
+.oenv
 .idea
