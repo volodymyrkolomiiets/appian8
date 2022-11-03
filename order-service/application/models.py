@@ -6,8 +6,8 @@ class Order(db.Model):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
-    items = db.relaitionship('OrderItems', beckref='orderItem')
-    is_open = db.Column(db.Boolean, defaul=True)
+    items = db.relationship('OrderItem', backref='orderItem')
+    is_open = db.Column(db.Boolean, default=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
@@ -31,11 +31,11 @@ class Order(db.Model):
 class OrderItem(db.Model):
     __tablename__ = "OrderItems"
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeingKey("orders.id"))
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"))
     product_id = db.Column(db.Integer)
     quantity = db.Column(db.Integer, default=1)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    date_update = db.Column(db.DateTime, update=datetime.utcnow)
+    date_update = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
     def __init__(self, product_id, quantity):
         self.product_id = product_id
