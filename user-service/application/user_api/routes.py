@@ -17,7 +17,7 @@ def load_user_from_request(request):
     api_key = request.headers.get("Authorization")
     if api_key:
         api_key = api_key.replace("Basic ", '', 1)
-        user = User.query.filter(api_key=api_key).first
+        user = User.query.filter_by(api_key=api_key).first()
         if user:
             return user
     return None

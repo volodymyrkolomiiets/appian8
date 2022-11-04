@@ -24,7 +24,7 @@ def order_add_item():
         return make_response(jsonify({"message": "Not logged in"}), 404)
     user = response["result"]
     p_id = int(request.form["product_id"])
-    qty = int(request.form['qut'])
+    qty = int(request.form['qty'])
     u_id = int(user['id'])
 
     known_order = Order.query.filter_by(user_id=u_id, is_open=True).first()
