@@ -14,7 +14,9 @@ def load_user(user_id):
 
 @login_manager.request_loader
 def load_user_from_request(request):
+    print('something wrong')
     api_key = request.headers.get("Authorization")
+    print("get key !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     if api_key:
         api_key = api_key.replace("Basic ", '', 1)
         user = User.query.filter_by(api_key=api_key).first()
@@ -25,6 +27,7 @@ def load_user_from_request(request):
 
 @user_api_blueprint.route("/api/users", methods=["GET"])
 def get_users():
+    print('get user !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     data = []
     for row in User.query.all():
         data.append(row.to_json())
@@ -93,6 +96,7 @@ def get_username(username):
 @login_required
 @user_api_blueprint.route("/api/user", methods=["GET"])
 def get_user():
+    print('Calling get user func 1!!!!!!!!!!!!!!!!!!!!!')
     if current_user.is_authenticated:
         return make_response(jsonify({"result": current_user.to_json()}))
     return make_response(jsonify({"message": "Not Logged In"})), 401

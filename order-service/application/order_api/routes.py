@@ -17,11 +17,10 @@ def orders():
 
 @order_api_blueprint.route("/api/order/add-item", methods=["POST"])
 def order_add_item():
-    # api_key = request.headers.get("Authorization")
-    api_key = "$5$rounds=535000$JCaOzj9FuFwZ0CHE$9FFG84nHwBW1GmTCA0xaaYddO.VS4LuKJOLOYCq/nS/"
+    api_key = request.headers.get("Authorization")
     response = UserClient.get_user(api_key)
     if not response:
-        return make_response(jsonify({"message": "Not logged in"}), 404)
+        return make_response(jsonify({"message": "Not logged in4"}), 404)
     user = response["result"]
     p_id = int(request.form["product_id"])
     qty = int(request.form['qty'])
@@ -48,4 +47,44 @@ def order_add_item():
     db.session.add(known_order)
     db.session.commit()
     response = jsonify({"result": known_order.to_json()})
+    return response
+
+
+@order_api_blueprint.route("/api/order", methods=["GET"])
+def order():
+    print('do not work')
+    api_key = request.headers.get("Authorization")
+    response = UserClient.get_user(api_key)
+
+    if not response:
+        return make_response(jsonify({"message": "Not logged in"}), 401)
+
+    user = response['result']
+    open_order = Order.query.filter_by(user_id=user["id"], is_open=1).first()
+    if open_order is None:
+        response = jsonify({"message": "No order found3"})
+    else:
+        response = jsonify({"result": open_order.to_json()})
+
+    return response
+
+
+@order_api_blueprint.route("/api/order/checkout", methods=["POST"])
+def checkout():
+    print("Call checkout function !!!!!!!!!!!!!!!!!!!!!!!!")
+    api_key = request.headers.get("Authorization")
+    response = UserClient.get_user(api_key)
+
+    if not response:
+        return make_response(jsonify({"message": "Not logged in2"}), 401)
+    user = response["result"]
+
+    order_model = Order.query.filter_by(user_id=user["id"], is_open=1).first()
+    if not order_model:
+        return jsonify({"message": "You have no order!"})
+    order_model.is_open = 0
+
+    db.session.add(order_model)
+    db.session.commit()
+    response = jsonify({"result": order_model.to_json()})
     return response
